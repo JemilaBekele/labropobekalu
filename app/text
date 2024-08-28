@@ -1,0 +1,3 @@
+git add .   
+>> git commit -m "Added all folders and files"
+>> git push origin main
