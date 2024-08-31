@@ -26,7 +26,7 @@ const TestFormmicro: React.FC<TestFormmicroProps> = ({ items, formData, handleCh
             name="result"
             value={formData[item]?.result || ''}
             className="flex-grow resize-none border rounded-md border-slate-200 bg-white text-lg font-light tracking-wide text-gray-500 outline-none p-2 hover:border-gray-400 focus:border-gray-500 focus:ring-2 focus:ring-gray-300"
-            rows={4}
+            rows={2}
             onChange={(e) => handleChange(e, item)}
           />
         </div>

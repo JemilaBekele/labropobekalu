@@ -32,15 +32,41 @@ const Elec_CombinedForm: React.FC = () => {
     }));
   };
 
+  const getElectroRemark = (item: string, result: string): string => {
+    const referenceRanges: { [key: string]: [number, number] } = {
+      'Sodium(Na+)': [136, 146],
+      'Calcium(Ca2+)': [1.08, 1.3],
+      'Potassium': [3.5, 5],
+      'Chlloride(Cl-)': [96, 106],
+     
+    };
+    const [low, high] = referenceRanges[item] || [0, 0];
+    const resultValue = parseFloat(result);
+
+    if (resultValue < low) {
+      return 'L';
+    } else if (resultValue > high) {
+      return 'H';
+    } else {
+      return '';
+    }
+  };
   const handleElecChange = (e: React.ChangeEvent<HTMLInputElement| HTMLTextAreaElement>, item: string) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [item]: {
-        ...prevData[item],
-        [name]: value,
-      },
-    }));
+    setFormData((prevData) => {
+      const remark = name === 'result' && ElecItems.includes(item)
+        ? getElectroRemark(item, value)
+        : prevData[item]?.remark || '';
+
+      return {
+        ...prevData,
+        [item]: {
+          ...prevData[item],
+          [name]: value,
+          remark: name === 'result' ? remark : prevData[item]?.remark || '',
+        },
+      };
+    });
   };
 
   const handleSubmit = () => {
@@ -56,7 +82,7 @@ const Elec_CombinedForm: React.FC = () => {
   };
 
   const ElecItems = [
-    'Sodium(Na+)', 'Calcium(Ca2+)', 'Potassium', 'Chloride(Cl-)'
+    'Sodium(Na+)', 'Calcium(Ca2+)', 'Potassium', 'Chlloride(Cl-)'
   ];
   const  recomende= ['Recommendation'];
   return (

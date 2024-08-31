@@ -7,25 +7,25 @@ export const Hor_generatePdf = (data: [string, { result: string; remark: string 
   const doc = new jsPDF();
   const formattedTime = formatDateTime(new Date(profileData.reportDate), 'medium'); 
 
-  // Add blue line at the top
-  doc.setDrawColor(3, 97, 97); // Set color to blue
-  doc.setLineWidth(5); // Set line width
-  doc.line(0, 0, doc.internal.pageSize.width, 0); // Draw line at y=0 to ensure visibility
-
   // Company Information
-  const imgWidth = 120; // Adjusted width for better fit
+  const imgWidth = 36; // Adjusted width for better fit
   const imgHeight = 30; // Adjusted height for better fit
-  const imagePath = "/image/bekalu.PNG";
+  const imagePath = "/image/logo.PNG";
   const x = (doc.internal.pageSize.width - imgWidth) / 2;
   const y = 5; // Decreased y-position for better spacing
 
   doc.setFontSize(12);
-  doc.addImage(imagePath, 'JPEG', x, y, imgWidth, imgHeight);
+  doc.addImage(imagePath, 'JPEG', 10, y, imgWidth, imgHeight);
 
-  // Line below the top bar
-  doc.setLineWidth(1);
-  doc.line(10, y + imgHeight + 10, 200, y + imgHeight + 10);
-
+  // Set font size and style for the main title
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.text('ULTRAHEALTH BIOMEDICAL', 120, 20, { align: 'center' });
+  
+  // Set font size and style for the subtitle
+  doc.setFontSize(16);
+  doc.setFont("helvetica", "normal");
+  doc.text('ENGINEERING PLC', 120, 30, { align: 'center' });
   // Profile Information in 3 columns
   const profileStartY = y + imgHeight + 15; // Increased spacing between image and profile information
   const leftColumnX = 10;
@@ -46,9 +46,14 @@ export const Hor_generatePdf = (data: [string, { result: string; remark: string 
   doc.text(`Age: ${profileData.age}`, middleColumnX, profileStartY + 16);
   doc.text(`Report Date: ${formattedTime}`, rightColumnX, profileStartY + 16);
 
-  // Line below profile information
-  doc.line(10, profileStartY + 20, 200, profileStartY + 20);
-
+   // Line below profile information
+   doc.setDrawColor(139, 103, 60);
+   doc.setLineWidth(2.5);
+   doc.line(10, profileStartY + 20, 200, profileStartY + 20);
+   doc.setDrawColor(29, 184, 205);
+   doc.setLineWidth(1.3);
+   doc.line(10, profileStartY + 23, 200, profileStartY + 23);
+ 
   // Add Electrolyte Title
   doc.setFontSize(14); // Slightly larger font for section titles
   doc.text('Hormon', leftColumnX, profileStartY + 30);
@@ -112,6 +117,12 @@ export const Hor_generatePdf = (data: [string, { result: string; remark: string 
 
       // Ensure the footer doesn't overlap with content
       const footerY = doc.internal.pageSize.height - 30;
+      doc.setLineWidth(0.7);
+
+      doc.setDrawColor(139, 103, 60);
+      
+      doc.line(10, footerY - 6, 200, footerY - 6);
+      doc.setDrawColor(29, 184, 205);
       doc.line(10, footerY - 5, 200, footerY - 5);
 
       doc.setFontSize(10);

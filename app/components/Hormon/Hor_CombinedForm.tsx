@@ -31,16 +31,47 @@ const Hor_CombinedForm: React.FC = () => {
       [name]: value,
     }));
   };
+  const getHormRemark = (item: string, result: string): string => {
+    const referenceRanges: { [key: string]: [number, number] } = {
+      'TSH': [0.3, 4.2],
+      'Total T3': [1.23, 3.07],
+      'Total T4': [66, 181],
+      'HgbAIC': [4.0, 6.0],
+      'Troponin': [0, 0.3],
+      'PSA': [0, 4],
+      'Vitamin D': [30, 100],
+      'LH': [2.95, 13.65],
+      'FSH': [4.46, 12.43],
+     
+    };
 
+    const [low, high] = referenceRanges[item] || [0, 0];
+    const resultValue = parseFloat(result);
+
+    if (resultValue < low) {
+      return 'L';
+    } else if (resultValue > high) {
+      return 'H';
+    } else {
+      return '';
+    }
+  };
   const handleCbcChange = (e: React.ChangeEvent<HTMLInputElement| HTMLTextAreaElement>, item: string) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [item]: {
-        ...prevData[item],
-        [name]: value,
-      },
-    }));
+    setFormData((prevData) => {
+      const remark = name === 'result' && HorItems.includes(item)
+        ? getHormRemark(item, value)
+        : prevData[item]?.remark || '';
+
+      return {
+        ...prevData,
+        [item]: {
+          ...prevData[item],
+          [name]: value,
+          remark: name === 'result' ? remark : prevData[item]?.remark || '',
+        },
+      };
+    });
   };
 
   const handleSubmit = () => {

@@ -53,7 +53,7 @@ const CombinedForms: React.FC = () => {
     Urinalysis: false,
     Recommendation: false
   };
-
+  type SectionType = 'Chemistry' | 'Hematology' | 'Electrolyte' | 'Hormone' | 'Rarasitology' | 'Microbiology' | 'Serology' | 'Urinalysis' | 'Recommendation';
   const [profileData, setProfileData] = useState<ProfileData>(initialProfileData);
   const [showTable, setShowTable] = useState<{ [key: string]: boolean }>(initialShowTable);
   const [formData, setFormData] = useState<{ [key: string]: { result: string; remark: string } }>({});
@@ -90,6 +90,33 @@ const CombinedForms: React.FC = () => {
       'PCT': [0.1, 0.5],
       'P-LCR': [13, 43],
       'ESR': [0, 20],
+      'SGOT': [45, 45],
+      'SGPT': [40, 40],
+      'ALKPHOSE': [90, 300],
+      'T.Bilirubin': [0.2, 1.0],
+      'D.Bilirubin': [0.0, 0.2],
+      'BUN(UREA)': [10, 40],
+      'CREATININE': [0.6, 1.2],
+      'FBS(RBS)': [70, 104],
+      'URIC ACID': [3, 7],
+      'T.CHOLESTROL': [200, 200],
+      'Triglycerides': [190, 190],
+      'LDL': [100, 100],
+      'HDL': [60, 60],
+      'T.Cholesterol to HDL': [5, 5],
+      'Sodium(Na+)': [136, 146],
+      'Calcium(Ca2+)': [1.08, 1.3],
+      'Potassium': [3.5, 5],
+      'Chlloride(Cl-)': [96, 106],
+      'TSH': [0.3, 4.2],
+      'Total T3': [1.23, 3.07],
+      'Total T4': [66, 181],
+      'HgbAIC': [4.0, 6.0],
+      'Troponin': [0, 0.3],
+      'PSA': [0, 4],
+      'Vitamin D': [30, 100],
+      'LH': [2.95, 13.65],
+      'FSH': [4.46, 12.43],
     };
 
     if (item === 'Blood Film' || item === 'Blood Group') {
@@ -112,24 +139,29 @@ const CombinedForms: React.FC = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, item: string) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    item: string
+  ) => {
     const { name, value } = e.target;
-
-    setFormData((prevData) => {
-      const remark = name === 'result' && sections.Hematology.includes(item)
-        ? getHematologyRemark(item, value)
-        : prevData[item]?.remark || '';
-
-      return {
-        ...prevData,
-        [item]: {
-          ...prevData[item],
-          [name]: value,
-          remark: name === 'result' ? remark : prevData[item]?.remark || '',
-        },
-      };
-    });
+  
+    const applicableSections: SectionType[] = ['Hematology', 'Chemistry', 'Electrolyte', 'Hormone'];
+  
+    const remark = name === 'result' && applicableSections.some(section => sections[section].includes(item))
+      ? getHematologyRemark(item, value)
+      : formData[item]?.remark || '';
+  
+    setFormData((prevData) => ({
+      ...prevData,
+      [item]: {
+        ...prevData[item],
+        [name]: value,
+        remark: name === 'result' ? remark : prevData[item]?.remark || '',
+      },
+    }));
   };
+  
+  
 
   const handleSubmit = () => {
     setShowTable((prevState) => ({
@@ -168,7 +200,7 @@ const CombinedForms: React.FC = () => {
     }));
   };
 
-  const sections = {
+  const  sections: Record<SectionType, string[]> = {
     Chemistry: [
       'SGOT', 'SGPT', 'ALKPHOSE', 'T.Bilirubin', 'D.Bilirubin', 
       'BUN(UREA)', 'CREATININE', 'FBS(RBS)', 'URIC ACID', 

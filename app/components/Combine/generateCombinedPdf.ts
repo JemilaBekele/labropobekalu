@@ -8,28 +8,47 @@ declare module 'jspdf-autotable' {
   }
 }
 
+declare module 'jspdf' {
+  interface jsPDF {
+      lastAutoTable: any;
+  }
+}
+
 type TestResult = {
   result: string;
   remark: string;
 };
 
 type DataEntry = [string, TestResult];
-const imagePath = "/image/bekalu.PNG";
+const imagePath = "/image/logo.PNG";
 
 let currentYPosition: number;
 
 const addHeaderAndProfile = (doc: jsPDF, profileData: ProfileData) => {
-  const imgWidth = 230;
-  const imgHeight = 36;
+  const imgWidth = 35;
+  const imgHeight = 30;
   const pageWidth = doc.internal.pageSize.width;
   const x = (pageWidth - imgWidth) / 2;
-  const y = 10;
+  const y = 5;
+  
 
-  doc.setDrawColor(3, 97, 97);
-  doc.setLineWidth(1);
-  doc.line(0, 0, doc.internal.pageSize.width, 0);
+  doc.setDrawColor(29, 184, 205);
+  doc.setLineWidth(1.3);
+  
 
-  doc.addImage(imagePath, 'JPEG', x, y, imgWidth, imgHeight);
+  doc.addImage(imagePath, 'JPEG', 10, y, imgWidth, imgHeight);
+// Set font size and style for the main title
+doc.setFontSize(22);
+doc.setFont("helvetica", "bold");
+doc.text('ULTRAHEALTH BIOMEDICAL', 120, 20, { align: 'center' });
+
+// Set font size and style for the subtitle
+doc.setFontSize(16);
+doc.setFont("helvetica", "normal");
+doc.text('ENGINEERING PLC', 120, 30, { align: 'center' });
+
+
+
 
   doc.setFontSize(12);
   const profileY = y + imgHeight + 10;
@@ -43,7 +62,12 @@ const addHeaderAndProfile = (doc: jsPDF, profileData: ProfileData) => {
   doc.text(`Location: ${profileData.location}`, 160, profileY+2);
 
   currentYPosition = profileY + 25;
-  doc.line(10, currentYPosition - 8, pageWidth - 10, currentYPosition - 8);
+  doc.line(10, currentYPosition - 5, doc.internal.pageSize.width - 10, currentYPosition - 5);
+  
+  doc.setDrawColor(139, 103, 60);
+  doc.setLineWidth(2.5);
+
+  doc.line(10, currentYPosition - 8, doc.internal.pageSize.width - 10, currentYPosition - 8);
 
   return currentYPosition;
 };
@@ -60,9 +84,12 @@ const addFooter = (doc: jsPDF) => {
   const footerY = doc.internal.pageSize.height - 37;
 
   // Draw a line below the authorized name
-  doc.setDrawColor(0, 0, 0); // Set line color to black
-  doc.setLineWidth(0.5);
+  doc.setDrawColor(139, 103, 60);
+ // Set line color to black
+  doc.setLineWidth(0.7);
   doc.line(10, footerY +15, doc.internal.pageSize.width - 10, footerY+15 );
+  doc.setDrawColor(29, 184, 205); 
+  doc.line(10, footerY +16, doc.internal.pageSize.width - 10, footerY+16 );
 
   // Draw the authorized name
   doc.setFontSize(10);

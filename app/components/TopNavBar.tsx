@@ -29,7 +29,7 @@ export const TopNavBar = () => {
               priority
             />
             <h1 className="text-xl whitespace-nowrap font-bold text-primary">
-              UltraHand
+              Ultra Health
             </h1>
           </div>
         </Link>
@@ -38,7 +38,7 @@ export const TopNavBar = () => {
           className="flex items-center gap-2 text-sm font-medium"
         >
           {[
-            ["/report-builder", "Laboratory Report  Builder"],
+            ["/resume-parser", "Laboratory Report  Builder"],
             
           ].map(([href, text]) => (
             <Link
