@@ -4,8 +4,35 @@ import { usePathname } from "next/navigation";
 import { cx } from "../lib/cx";
 import Link from "next/link";
 import Image from "next/image";
-
+import React, { useEffect } from 'react';
 export const TopNavBar = () => {
+  if (typeof window !== 'undefined') {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then((registration) => {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }).catch((error) => {
+          console.log('ServiceWorker registration failed: ', error);
+        });
+      });
+    }
+  }
+  
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const script = document.createElement('script');
+      script.src = '/service-worker-registration.js';
+      script.async = true;
+      document.body.appendChild(script);
+
+      return () => {
+        // Cleanup script if needed
+        document.body.removeChild(script);
+      };
+    }
+  }, []);
+
   const pathname = usePathname();
   const isHomePage = pathname === "/";
 
